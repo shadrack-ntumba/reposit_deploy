@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minuteur</title>
+    <style>
+        body {
+            background-image: url('image/OIP.jpeg');
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        #timer {
+            font-size: 3em;
+            background-color: blueviolet;
+        }
+    </style>
+</head>
+<body>
+    <div id="timer">00:00</div>
+
+    <script>
+        function startTimer(duration) {
+            let timer = duration, minutes, seconds;
+            const display = document.getElementById('timer');
+            const interval = setInterval(function () {
+                minutes = parseInt(timer / 60, 10);
+                seconds = parseInt(timer % 60, 10);
+
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                display.textContent = minutes + ":" + seconds;
+
+                if (--timer < 0) {
+                    clearInterval(interval);
+                    alert("votre repas est prêt !");
+                }
+            }, 1000);
+        }
+
+        fetch('http://[adresse IP du serveur]:5000/get_timer')  // Remplacez [adresse IP du serveur] par l'adresse IP du serveur
+            .then(response => response.json())
+            .then(data => {
+                if (data.time) {
+                    startTimer(parseInt(data.time, 10));
+                } else {
+                    alert('Erreur lors de la récupération du temps de cuisson.');
+                }
+            });
+    </script>
+</body>
+</html>

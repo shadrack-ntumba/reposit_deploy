@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saisie du Temps</title>
+</head>
+<body>
+    <form id="timeForm">
+        <label for="time">Entrez le temps de cuisson en secondes:</label>
+        <input type="number" id="time" name="time" required>
+        <button type="submit">Démarrer le Minuteur</button>
+    </form>
+
+    <script>
+        document.getElementById('timeForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const time = document.getElementById('time').value;
+            if (time && time > 0) {
+                fetch('http://[adresse IP du serveur]:5000/set_timer', {  // Remplacez [adresse IP du serveur] par l'adresse IP du serveur
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ time: time })
+                }).then(response => response.json())
+                  .then(data => {
+                      if (data.success) {
+                          window.location.href = 'http://[adresse IP du serveur]:5000/timer.html';  // Remplacez [adresse IP du serveur] par l'adresse IP du serveur
+                      } else {
+                          alert('Erreur de démarrage du minuteur');
+                      }
+                  });
+            } else {
+                alert("Veuillez entrer un nombre valide.");
+            }
+        });
+    </script>
+</body>
+</html>
